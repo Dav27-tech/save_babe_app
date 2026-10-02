@@ -1,0 +1,182 @@
+﻿import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../features/ai_assistant/presentation/screens/ai_privacy_screen.dart';
+import '../../features/ai_assistant/presentation/screens/chat_screen.dart';
+import '../../features/ai_assistant/presentation/screens/voice_screen.dart';
+import '../../features/appointments/presentation/screens/appointments_screen.dart';
+import '../../features/baby_tracker/presentation/screens/baby_create_screen.dart';
+import '../../features/baby_tracker/presentation/screens/baby_screen.dart';
+import '../../features/emergency/presentation/screens/emergency_screen.dart';
+import '../../features/health_card_scan/presentation/screens/confirm_screen.dart';
+import '../../features/health_card_scan/presentation/screens/import_screen.dart';
+import '../../features/health_card_scan/presentation/screens/ocr_screen.dart';
+import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/onboarding/presentation/screens/consent_screen.dart';
+import '../../features/onboarding/presentation/screens/pregnancy_screen.dart';
+import '../../features/onboarding/presentation/screens/ready_screen.dart';
+import '../../features/onboarding/presentation/screens/signup_screen.dart';
+import '../../features/onboarding/presentation/screens/sync_screen.dart';
+import '../../features/onboarding/presentation/screens/welcome_screen.dart';
+import '../../features/pregnancy_tracker/presentation/screens/metrics_screen.dart';
+import '../../features/pregnancy_tracker/presentation/screens/tracking_screen.dart';
+import '../../features/profile/presentation/screens/language_screen.dart';
+import '../../features/profile/presentation/screens/offline_screen.dart';
+import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/profile/presentation/screens/theme_screen.dart';
+import '../../features/trusted_person/presentation/screens/invite_screen.dart';
+import '../state/app_user_provider.dart';
+import 'scaffold_with_nav_bar.dart';
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
+
+final routerProvider = Provider<GoRouter>((ref) {
+  final userState = ref.watch(appUserStateProvider);
+
+  return GoRouter(
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: userState.onboarded ? '/app/home' : '/onboarding/welcome',
+    redirect: (context, state) {
+      final isOnboarding = state.matchedLocation.startsWith('/onboarding');
+      final isRoot = state.matchedLocation == '/';
+
+      if (!userState.onboarded && !isOnboarding) {
+        return '/onboarding/welcome';
+      }
+
+      if (userState.onboarded && isRoot) {
+        return '/app/home';
+      }
+
+      return null;
+    },
+    routes: [
+      // ── Routes Onboarding ─────────────────────────────────────
+      GoRoute(
+        path: '/onboarding/welcome',
+        builder: (context, state) => const WelcomeScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding/signup',
+        builder: (context, state) => const SignupScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding/pregnancy',
+        builder: (context, state) => const PregnancyScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding/consent',
+        builder: (context, state) => const ConsentScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding/sync',
+        builder: (context, state) => const SyncScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding/ready',
+        builder: (context, state) => const ReadyScreen(),
+      ),
+
+      // ── Shell principal avec Barre de navigation inférieure ───
+      ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        builder: (context, state, child) => ScaffoldWithNavBar(child: child),
+        routes: [
+          GoRoute(
+            path: '/app/home',
+            builder: (context, state) => const HomeScreen(),
+          ),
+          GoRoute(
+            path: '/app/tracking',
+            builder: (context, state) => const TrackingScreen(),
+            routes: [
+              GoRoute(
+                path: 'metrics',
+                builder: (context, state) => const MetricsScreen(),
+              ),
+            ],
+          ),
+          GoRoute(
+            path: '/app/appointments',
+            builder: (context, state) => const AppointmentsScreen(),
+          ),
+          GoRoute(
+            path: '/app/baby',
+            builder: (context, state) => const BabyScreen(),
+            routes: [
+              GoRoute(
+                path: 'create',
+                builder: (context, state) => const BabyCreateScreen(),
+              ),
+            ],
+          ),
+          GoRoute(
+            path: '/app/profile',
+            builder: (context, state) => const ProfileScreen(),
+            routes: [
+              GoRoute(
+                path: 'offline',
+                builder: (context, state) => const OfflineScreen(),
+              ),
+              GoRoute(
+                path: 'language',
+                builder: (context, state) => const LanguageScreen(),
+              ),
+              GoRoute(
+                path: 'theme',
+                builder: (context, state) => const ThemeScreen(),
+              ),
+              GoRoute(
+                path: 'ai-privacy',
+                builder: (context, state) => const AiPrivacyScreen(),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      // ── Routes Modales / Plein écran (hors navigation shell) ──
+      GoRoute(
+        path: '/chat',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => ChatScreen(
+          initialQuery: state.extra as String?,
+        ),
+      ),
+      GoRoute(
+        path: '/voice',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const VoiceScreen(),
+      ),
+      GoRoute(
+        path: '/import',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ImportScreen(),
+      ),
+      GoRoute(
+        path: '/ocr',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => OcrScreen(
+          imagePath: state.extra as String?,
+        ),
+      ),
+      GoRoute(
+        path: '/confirm',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ConfirmScreen(),
+      ),
+      GoRoute(
+        path: '/emergency',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const EmergencyScreen(),
+      ),
+      GoRoute(
+        path: '/invite',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const InviteScreen(),
+      ),
+    ],
+  );
+});

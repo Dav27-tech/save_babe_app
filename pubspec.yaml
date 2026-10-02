@@ -1,0 +1,77 @@
+﻿name: save_babe
+description: Suivi de grossesse et du nouveau-né — privé, hors connexion, panafricain.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.13.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # ── State Management & DI ──────────────────────────────────
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.3.5
+
+  # ── Navigation ─────────────────────────────────────────────
+  go_router: ^14.6.3
+
+  # ── Immutabilité & Sérialisation ───────────────────────────
+  freezed_annotation: ^3.0.0
+  json_annotation: ^4.9.0
+
+  # ── Programmation Fonctionnelle ────────────────────────────
+  fpdart: ^1.1.0
+
+  # ── Stockage Local (Offline-First) ─────────────────────────
+  hive_flutter: ^1.1.0
+
+  # ── OCR ────────────────────────────────────────────────────
+  google_mlkit_text_recognition: ^0.13.1
+
+  # ── Audio (STT + TTS) ──────────────────────────────────────
+  speech_to_text: ^7.0.0
+  flutter_tts: ^4.2.0
+
+  # ── Connectivité ───────────────────────────────────────────
+  connectivity_plus: ^6.1.4
+
+  # ── Typographie ────────────────────────────────────────────
+  google_fonts: ^6.2.1
+
+  # ── Image & Camera ─────────────────────────────────────────
+  image_picker: ^1.1.2
+
+  # ── Appels téléphoniques ───────────────────────────────────
+  url_launcher: ^6.3.1
+
+  # ── Icônes ─────────────────────────────────────────────────
+  flutter_svg: ^2.0.10+1
+  material_symbols_icons: ^4.2815.0
+
+  # ── Utilitaires ────────────────────────────────────────────
+  intl: ^0.20.2
+  crypto: ^3.0.3
+  uuid: ^4.5.1
+  path_provider: ^2.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # ── Génération de code ─────────────────────────────────────
+  build_runner: ^2.4.13
+  freezed: ^3.0.0
+  json_serializable: ^6.8.0
+  riverpod_generator: ^2.4.3
+  custom_lint: ^0.7.5
+  riverpod_lint: ^2.3.13
+
+  # ── Tests ──────────────────────────────────────────────────
+  mocktail: ^1.0.4
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+

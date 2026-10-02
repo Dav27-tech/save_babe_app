@@ -141,7 +141,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
               SbButton(
                 text: 'Se connecter',
                 variant: SbButtonVariant.outline,
-                onPressed: () => context.push('/onboarding/signup'),
+                onPressed: () => context.push('/onboarding/login'),
               ),
               const SizedBox(height: 8),
               SbButton(

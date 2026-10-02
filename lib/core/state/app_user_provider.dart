@@ -1,8 +1,9 @@
-﻿import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../network/network_info.dart';
 import '../services/audio_service.dart';
+import '../services/auth_service.dart';
 import '../services/local_storage_service.dart';
 import '../services/ocr_service.dart';
 import 'app_user_notifier.dart';
@@ -27,7 +28,9 @@ final ocrServiceProvider = Provider<OcrService>((ref) {
 final appUserStateNotifierProvider =
     StateNotifierProvider<AppUserNotifier, AppUserState>((ref) {
   final storage = ref.watch(localStorageServiceProvider);
-  return AppUserNotifier(storage);
+  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  final uid = user?.uid ?? 'guest';
+  return AppUserNotifier(storage, uid);
 });
 
 final appUserStateProvider = Provider<AppUserState>((ref) {

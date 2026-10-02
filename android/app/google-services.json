@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "96249433647",
+    "project_id": "savebabe-78943",
+    "storage_bucket": "savebabe-78943.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96249433647:android:b660323eea2c7f0b30c0da",
+        "android_client_info": {
+          "package_name": "com.savebabe.save_babe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxIfqJzSgE8gll5O9HumROSQSO5t2JRZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

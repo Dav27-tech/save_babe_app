@@ -1,6 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/services/auth_service.dart';
 import '../../../../core/state/app_user_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
@@ -139,18 +140,53 @@ class ProfileScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 28),
-              // Déconnexion et reset
+              // Bouton Se déconnecter
               SbButton(
-                text: 'Se déconnecter et effacer',
+                text: 'Se déconnecter',
                 variant: SbButtonVariant.outline,
-                icon: const Icon(Icons.logout_rounded, color: AppColors.destructive, size: 18),
+                icon: const Icon(Icons.logout_rounded, size: 18),
+                onPressed: () async {
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Déconnexion'),
+                      content: const Text(
+                        'Souhaitez-vous vous déconnecter de SaveBabe ? Vos données restent sauvegardées sur cet appareil.',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, false),
+                          child: const Text('Annuler'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, true),
+                          child: const Text('Déconnexion'),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (confirmed == true) {
+                    await ref.read(authServiceProvider).signOut();
+                    if (context.mounted) {
+                      context.go('/onboarding/welcome');
+                    }
+                  }
+                },
+              ),
+              const SizedBox(height: 12),
+              // Bouton Supprimer les données locales
+              SbButton(
+                text: 'Supprimer mes données locales',
+                variant: SbButtonVariant.ghost,
+                icon: const Icon(Icons.delete_outline_rounded, color: AppColors.destructive, size: 18),
                 onPressed: () async {
                   final confirmed = await showDialog<bool>(
                     context: context,
                     builder: (ctx) => AlertDialog(
                       title: const Text('Confirmer la suppression'),
                       content: const Text(
-                        'Supprimer toutes vos données de cet appareil ? Cette action est irréversible.',
+                        'Supprimer toutes vos données de cet appareil ? Cette action est irréversible pour les données locales.',
                       ),
                       actions: [
                         TextButton(
@@ -170,6 +206,7 @@ class ProfileScreen extends ConsumerWidget {
 
                   if (confirmed == true) {
                     await ref.read(appUserStateNotifierProvider.notifier).reset();
+                    await ref.read(authServiceProvider).signOut();
                     if (context.mounted) {
                       context.go('/onboarding/welcome');
                     }

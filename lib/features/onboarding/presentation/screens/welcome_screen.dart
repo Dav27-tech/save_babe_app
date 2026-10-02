@@ -143,19 +143,6 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
                 variant: SbButtonVariant.outline,
                 onPressed: () => context.push('/onboarding/login'),
               ),
-              const SizedBox(height: 8),
-              SbButton(
-                text: 'Découvrir l\'application ›',
-                variant: SbButtonVariant.ghost,
-                onPressed: () async {
-                  await ref.read(appUserStateNotifierProvider.notifier).update(
-                        (s) => s.copyWith(onboarded: true),
-                      );
-                  if (context.mounted) {
-                    context.go('/app/home');
-                  }
-                },
-              ),
               const SizedBox(height: 16),
               const SbPrivateBadge(text: 'Vos données restent privées'),
             ],

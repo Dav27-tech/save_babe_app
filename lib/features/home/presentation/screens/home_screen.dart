@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/state/app_user_provider.dart';
@@ -135,7 +135,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           width: 36,
                           height: 36,
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkPrimary.withOpacity(0.2) : AppColors.secondary,
+                            color: isDark ? AppColors.darkPrimary.withValues(alpha: 0.2) : AppColors.secondary,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -174,7 +174,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkBorder.withOpacity(0.4) : const Color(0xFFF1F3F9),
+                        color: isDark ? AppColors.darkBorder.withValues(alpha: 0.4) : const Color(0xFFF1F3F9),
                         borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
                       ),
                       child: Text(

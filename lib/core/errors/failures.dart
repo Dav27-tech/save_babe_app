@@ -1,5 +1,5 @@
-﻿/// Représente un échec dans la couche Domain.
-/// Utilise les sealed classes natives Dart 3 avec Either<Failure, T> (fpdart).
+/// Représente un échec dans la couche Domain.
+/// Utilise les sealed classes natives Dart 3 avec `Either<Failure, T>` (fpdart).
 sealed class Failure {
   const Failure(this.message, {this.cause});
   final String message;

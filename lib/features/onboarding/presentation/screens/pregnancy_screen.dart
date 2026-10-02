@@ -206,7 +206,7 @@ class _OptionButton extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final bgColor = isSelected
-        ? (isDark ? AppColors.darkPrimary.withOpacity(0.2) : AppColors.secondary)
+        ? (isDark ? AppColors.darkPrimary.withValues(alpha: 0.2) : AppColors.secondary)
         : (isDark ? AppColors.darkCard : AppColors.card);
     final borderColor = isSelected
         ? (isDark ? AppColors.darkPrimary : AppColors.primary)

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -59,7 +59,7 @@ class _ImportScreenState extends State<ImportScreen> {
                   color: isDark ? AppColors.darkCard : AppColors.card,
                   borderRadius: BorderRadius.circular(AppDimensions.radius2xl),
                   border: Border.all(
-                    color: isDark ? AppColors.darkPrimary.withOpacity(0.5) : AppColors.primary.withOpacity(0.3),
+                    color: isDark ? AppColors.darkPrimary.withValues(alpha: 0.5) : AppColors.primary.withValues(alpha: 0.3),
                     width: 1.5,
                   ),
                 ),
@@ -69,7 +69,7 @@ class _ImportScreenState extends State<ImportScreen> {
                       width: 64,
                       height: 64,
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkPrimary.withOpacity(0.2) : AppColors.secondary,
+                        color: isDark ? AppColors.darkPrimary.withValues(alpha: 0.2) : AppColors.secondary,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(

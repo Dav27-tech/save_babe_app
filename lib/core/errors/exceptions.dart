@@ -1,5 +1,6 @@
-﻿/// Exceptions typées utilisées dans la couche Data.
+/// Exceptions typées utilisées dans la couche Data.
 /// Converties en Failure dans les repositories.
+library;
 
 class StorageException implements Exception {
   const StorageException(this.message, {this.cause});

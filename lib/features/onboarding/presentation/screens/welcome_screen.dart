@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/state/app_user_provider.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/sb_button.dart';
@@ -67,8 +67,8 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
                       gradient: LinearGradient(
                         colors: isDark
                             ? [
-                                AppColors.darkPrimary.withOpacity(0.3),
-                                AppColors.darkPink.withOpacity(0.2)
+                                AppColors.darkPrimary.withValues(alpha: 0.3),
+                                AppColors.darkPink.withValues(alpha: 0.2)
                               ]
                             : [
                                 AppColors.secondary,
@@ -96,7 +96,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
                           color: AppColors.pink,
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.pink.withOpacity(0.4),
+                              color: AppColors.pink.withValues(alpha: 0.4),
                               blurRadius: 14,
                               offset: const Offset(0, 4),
                             ),

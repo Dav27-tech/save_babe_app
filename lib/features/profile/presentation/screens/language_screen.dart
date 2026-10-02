@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/state/app_user_provider.dart';
@@ -223,7 +223,7 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? (isDark ? AppColors.darkPrimary.withOpacity(0.2) : AppColors.secondary)
+                            ? (isDark ? AppColors.darkPrimary.withValues(alpha: 0.2) : AppColors.secondary)
                             : (isDark ? AppColors.darkCard : AppColors.card),
                         borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
                         border: Border.all(

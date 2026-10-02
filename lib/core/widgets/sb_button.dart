@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_dimensions.dart';
 import '../theme/app_typography.dart';
@@ -86,7 +86,7 @@ class _SbButtonState extends State<SbButton> with SingleTickerProviderStateMixin
         shadows = isEnabled
             ? [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.25),
+                  color: AppColors.primary.withValues(alpha: 0.25),
                   blurRadius: 16,
                   offset: const Offset(0, 4),
                 )
@@ -111,7 +111,7 @@ class _SbButtonState extends State<SbButton> with SingleTickerProviderStateMixin
         shadows = isEnabled
             ? [
                 BoxShadow(
-                  color: AppColors.destructive.withOpacity(0.25),
+                  color: AppColors.destructive.withValues(alpha: 0.25),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 )
@@ -120,7 +120,7 @@ class _SbButtonState extends State<SbButton> with SingleTickerProviderStateMixin
         break;
     }
 
-    Widget content = Row(
+    final Widget content = Row(
       mainAxisSize: widget.fullWidth ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

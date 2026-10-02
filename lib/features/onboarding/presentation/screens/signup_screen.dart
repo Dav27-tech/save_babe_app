@@ -113,13 +113,18 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           message = 'Le mot de passe est trop faible (6 caractères minimum).';
           break;
         case 'operation-not-allowed':
-          message = 'L\'authentification par e-mail n\'est pas activée sur Firebase.';
+        case 'configuration-not-found':
+          message = 'L\'authentification par e-mail n\'est pas activée sur la console Firebase.';
           break;
         case 'network-request-failed':
           message = 'Connexion internet impossible. Vérifiez votre réseau.';
           break;
         default:
-          message = e.message ?? message;
+          if (e.message != null && e.message!.contains('CONFIGURATION_NOT_FOUND')) {
+            message = 'L\'authentification Email/Mot de passe n\'est pas encore activée dans la console Firebase.';
+          } else {
+            message = e.message ?? message;
+          }
       }
       _showError(message);
     } catch (e) {

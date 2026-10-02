@@ -79,6 +79,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         case 'user-disabled':
           message = 'Ce compte a été désactivé.';
           break;
+        case 'operation-not-allowed':
+        case 'configuration-not-found':
+          message = 'L\'authentification par e-mail n\'est pas activée sur la console Firebase.';
+          break;
         case 'too-many-requests':
           message = 'Trop de tentatives. Veuillez patienter avant de réessayer.';
           break;
@@ -86,7 +90,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           message = 'Connexion internet impossible. Vérifiez votre réseau.';
           break;
         default:
-          message = e.message ?? 'Une erreur inattendue est survenue.';
+          if (e.message != null && e.message!.contains('CONFIGURATION_NOT_FOUND')) {
+            message = 'L\'authentification Email/Mot de passe n\'est pas encore activée dans la console Firebase.';
+          } else {
+            message = e.message ?? 'Une erreur inattendue est survenue.';
+          }
       }
       _showError(message);
     } catch (e) {

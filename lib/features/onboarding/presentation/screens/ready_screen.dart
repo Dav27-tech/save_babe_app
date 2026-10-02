@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/state/app_user_provider.dart';
@@ -13,11 +13,13 @@ import '../../../../core/widgets/sb_header.dart';
 class ReadyScreen extends ConsumerWidget {
   const ReadyScreen({super.key});
 
-  void _finishAndGo(BuildContext context, WidgetRef ref, String targetRoute) {
-    ref.read(appUserStateNotifierProvider.notifier).update(
+  void _finishAndGo(BuildContext context, WidgetRef ref, String targetRoute) async {
+    await ref.read(appUserStateNotifierProvider.notifier).update(
           (s) => s.copyWith(onboarded: true),
         );
-    context.go(targetRoute);
+    if (context.mounted) {
+      context.go(targetRoute);
+    }
   }
 
   @override

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/state/app_user_provider.dart';
@@ -23,6 +23,7 @@ class _PregnancyScreenState extends ConsumerState<PregnancyScreen> {
   late String _lmp;
   late String _firstPregnancy;
   late final TextEditingController _centerController;
+  late final TextEditingController _lmpController;
 
   @override
   void initState() {
@@ -31,11 +32,13 @@ class _PregnancyScreenState extends ConsumerState<PregnancyScreen> {
     _lmp = user.lmp.isNotEmpty ? user.lmp : DateTime.now().subtract(const Duration(days: 168)).toIso8601String().split('T')[0];
     _firstPregnancy = user.firstPregnancy;
     _centerController = TextEditingController(text: user.center);
+    _lmpController = TextEditingController(text: _lmp);
   }
 
   @override
   void dispose() {
     _centerController.dispose();
+    _lmpController.dispose();
     super.dispose();
   }
 
@@ -52,19 +55,22 @@ class _PregnancyScreenState extends ConsumerState<PregnancyScreen> {
     if (picked != null) {
       setState(() {
         _lmp = picked.toIso8601String().split('T')[0];
+        _lmpController.text = _lmp;
       });
     }
   }
 
-  void _saveAndProceed() {
-    ref.read(appUserStateNotifierProvider.notifier).update(
+  void _saveAndProceed() async {
+    await ref.read(appUserStateNotifierProvider.notifier).update(
           (s) => s.copyWith(
             lmp: _lmp,
             firstPregnancy: _firstPregnancy,
             center: _centerController.text.trim(),
           ),
         );
-    context.push('/onboarding/consent');
+    if (mounted) {
+      context.push('/onboarding/consent');
+    }
   }
 
   @override
@@ -94,7 +100,7 @@ class _PregnancyScreenState extends ConsumerState<PregnancyScreen> {
                 readOnly: true,
                 onTap: _selectDate,
                 suffixIcon: const Icon(Icons.calendar_today_rounded, size: 20),
-                controller: TextEditingController(text: _lmp),
+                controller: _lmpController,
               ),
               // Carte résumé DPA
               SbCard(

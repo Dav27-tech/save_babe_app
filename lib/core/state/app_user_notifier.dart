@@ -1,27 +1,30 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/app_keys.dart';
 import '../services/local_storage_service.dart';
 import 'app_user_state.dart';
 
 class AppUserNotifier extends StateNotifier<AppUserState> {
-  AppUserNotifier(this._storageService) : super(const AppUserState()) {
-    load();
-  }
+  AppUserNotifier(this._storageService) : super(_loadInitialState(_storageService));
 
   final LocalStorageService _storageService;
   static const String _stateStorageKey = 'savebabe-state-v1';
 
-  Future<void> load() async {
+  static AppUserState _loadInitialState(LocalStorageService storageService) {
     try {
-      final raw = _storageService.get<String>(AppKeys.userStateBox, _stateStorageKey);
+      final raw = storageService.get<String>(AppKeys.userStateBox, _stateStorageKey);
       if (raw != null && raw.isNotEmpty) {
         final map = jsonDecode(raw) as Map<dynamic, dynamic>;
-        state = AppUserState.fromJson(map);
+        return AppUserState.fromJson(map);
       }
     } catch (_) {
-      // Fallback sur l'\''état initial en cas d'\''erreur
+      // Fallback sur l'état initial en cas d'erreur
     }
+    return const AppUserState();
+  }
+
+  Future<void> load() async {
+    state = _loadInitialState(_storageService);
   }
 
   Future<void> _persist() async {

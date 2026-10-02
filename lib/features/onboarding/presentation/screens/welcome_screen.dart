@@ -1,19 +1,21 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/state/app_user_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/sb_button.dart';
 import '../../../../core/widgets/sb_logo.dart';
 import '../../../../core/widgets/sb_private_badge.dart';
 
-class WelcomeScreen extends StatefulWidget {
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen>
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
@@ -145,7 +147,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               SbButton(
                 text: 'Découvrir l\'application ›',
                 variant: SbButtonVariant.ghost,
-                onPressed: () => context.push('/app/home'),
+                onPressed: () async {
+                  await ref.read(appUserStateNotifierProvider.notifier).update(
+                        (s) => s.copyWith(onboarded: true),
+                      );
+                  if (context.mounted) {
+                    context.go('/app/home');
+                  }
+                },
               ),
               const SizedBox(height: 16),
               const SbPrivateBadge(text: 'Vos données restent privées'),

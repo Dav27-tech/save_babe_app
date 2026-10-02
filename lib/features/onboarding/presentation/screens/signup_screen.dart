@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/state/app_user_provider.dart';
@@ -45,6 +45,67 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       _contactController.text.trim().isNotEmpty &&
       _passwordController.text.length >= 6 &&
       _acceptedTerms;
+
+  void _submit() async {
+    final name = _nameController.text.trim();
+    final contact = _contactController.text.trim();
+    final password = _passwordController.text;
+
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Veuillez renseigner votre prénom'),
+          backgroundColor: AppColors.destructive,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    if (contact.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Veuillez renseigner votre e-mail ou numéro de téléphone'),
+          backgroundColor: AppColors.destructive,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Le mot de passe doit comporter au moins 6 caractères'),
+          backgroundColor: AppColors.destructive,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    if (!_acceptedTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Veuillez accepter les conditions de confidentialité'),
+          backgroundColor: AppColors.destructive,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    await ref.read(appUserStateNotifierProvider.notifier).update(
+          (s) => s.copyWith(
+            name: name,
+            contact: contact,
+          ),
+        );
+
+    if (mounted) {
+      context.push('/onboarding/pregnancy');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,17 +190,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               const SizedBox(height: 24),
               SbButton(
                 text: 'Continuer',
-                onPressed: _isValid
-                    ? () {
-                        ref.read(appUserStateNotifierProvider.notifier).update(
-                              (s) => s.copyWith(
-                                name: _nameController.text.trim(),
-                                contact: _contactController.text.trim(),
-                              ),
-                            );
-                        context.push('/onboarding/pregnancy');
-                      }
-                    : null,
+                onPressed: _submit,
               ),
               const SbPrivateBadge(text: 'Vos informations sont chiffrées'),
             ],

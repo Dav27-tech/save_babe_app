@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/state/app_user_provider.dart';
@@ -33,8 +33,8 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
     _share = consent.share;
   }
 
-  void _saveAndProceed() {
-    ref.read(appUserStateNotifierProvider.notifier).update(
+  void _saveAndProceed() async {
+    await ref.read(appUserStateNotifierProvider.notifier).update(
           (s) => s.copyWith(
             consent: s.consent.copyWith(
               health: _health,
@@ -44,7 +44,9 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
             ),
           ),
         );
-    context.push('/onboarding/sync');
+    if (mounted) {
+      context.push('/onboarding/sync');
+    }
   }
 
   @override

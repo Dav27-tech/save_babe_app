@@ -1,6 +1,7 @@
 ﻿import 'package:hive_flutter/hive_flutter.dart';
 import '../constants/app_keys.dart';
 import '../errors/exceptions.dart';
+import 'encryption_service.dart';
 
 /// Interface pour le service de stockage local NoSQL (Hive)
 abstract class LocalStorageService {
@@ -32,9 +33,9 @@ class LocalStorageServiceImpl implements LocalStorageService {
   Future<void> init() async {
     try {
       await Hive.initFlutter();
+      final cipher = await _encryptionService.getHiveCipher();
       for (final boxName in _allBoxes) {
         if (!Hive.isBoxOpen(boxName)) {
-          final cipher = await _encryptionService.getHiveCipher();
           await Hive.openBox(boxName, encryptionCipher: cipher);
         }
       }

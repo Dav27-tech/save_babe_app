@@ -1,15 +1,25 @@
 ﻿import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../network/network_info.dart';
 import '../services/audio_service.dart';
+import '../services/encryption_service.dart';
 import '../services/local_storage_service.dart';
 import '../services/ocr_service.dart';
 import 'app_user_notifier.dart';
 import 'app_user_state.dart';
 
 final localStorageServiceProvider = Provider<LocalStorageService>((ref) {
-  return LocalStorageServiceImpl();
+  return LocalStorageServiceImpl(ref.watch(encryptionServiceProvider));
+});
+
+final encryptionServiceProvider = Provider<EncryptionService>((ref) {
+  return EncryptionService(ref.watch(secureStorageProvider));
+});
+
+final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
+  return const FlutterSecureStorage();
 });
 
 final networkInfoProvider = Provider<NetworkInfo>((ref) {

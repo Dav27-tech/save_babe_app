@@ -2,15 +2,14 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/router/app_router.dart';
-import 'core/services/local_storage_service.dart';
 import 'core/state/app_user_provider.dart';
 import 'core/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialisation du stockage local Hive
-  final storageService = LocalStorageServiceImpl();
+  final container = ProviderContainer();
+  final storageService = container.read(localStorageServiceProvider);
   await storageService.init();
 
   SystemChrome.setPreferredOrientations([
@@ -19,10 +18,8 @@ void main() async {
   ]);
 
   runApp(
-    ProviderScope(
-      overrides: [
-        localStorageServiceProvider.overrideWithValue(storageService),
-      ],
+    UncontrolledProviderScope(
+      container: container,
       child: const SaveBabeApp(),
     ),
   );

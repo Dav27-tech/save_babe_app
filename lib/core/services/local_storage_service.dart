@@ -16,6 +16,8 @@ abstract class LocalStorageService {
 
 /// Implémentation Hive du LocalStorageService
 class LocalStorageServiceImpl implements LocalStorageService {
+  final EncryptionService _encryptionService;
+  LocalStorageServiceImpl(this._encryptionService);
   static const List<String> _allBoxes = [
     AppKeys.userStateBox,
     AppKeys.appointmentsBox,
@@ -32,7 +34,8 @@ class LocalStorageServiceImpl implements LocalStorageService {
       await Hive.initFlutter();
       for (final boxName in _allBoxes) {
         if (!Hive.isBoxOpen(boxName)) {
-          await Hive.openBox(boxName);
+          final cipher = await _encryptionService.getHiveCipher();
+          await Hive.openBox(boxName, encryptionCipher: cipher);
         }
       }
     } catch (e) {
@@ -83,7 +86,10 @@ class LocalStorageServiceImpl implements LocalStorageService {
       final box = _getBox(boxName);
       return box.values.cast<T>().toList();
     } catch (e) {
-      throw StorageException('Erreur de récupération de tous les éléments ($boxName)', cause: e);
+      throw StorageException(
+        'Erreur de récupération de tous les éléments ($boxName)',
+        cause: e,
+      );
     }
   }
 
@@ -93,7 +99,10 @@ class LocalStorageServiceImpl implements LocalStorageService {
       final box = _getBox(boxName);
       return box.toMap();
     } catch (e) {
-      throw StorageException('Erreur de conversion de boîte en Map ($boxName)', cause: e);
+      throw StorageException(
+        'Erreur de conversion de boîte en Map ($boxName)',
+        cause: e,
+      );
     }
   }
 
@@ -103,7 +112,10 @@ class LocalStorageServiceImpl implements LocalStorageService {
       final box = _getBox(boxName);
       await box.clear();
     } catch (e) {
-      throw StorageException('Erreur lors du vidage de la boîte ($boxName)', cause: e);
+      throw StorageException(
+        'Erreur lors du vidage de la boîte ($boxName)',
+        cause: e,
+      );
     }
   }
 
@@ -116,7 +128,10 @@ class LocalStorageServiceImpl implements LocalStorageService {
         }
       }
     } catch (e) {
-      throw StorageException('Erreur lors de la réinitialisation de toutes les boîtes', cause: e);
+      throw StorageException(
+        'Erreur lors de la réinitialisation de toutes les boîtes',
+        cause: e,
+      );
     }
   }
 }

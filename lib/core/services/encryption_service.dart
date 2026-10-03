@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -16,6 +18,9 @@ class EncryptionService {
       await _storage.write(key: _keyName, value: encoded);
     }
     final keyBytes = base64Url.decode(encoded);
+    if (keyBytes.length != 32) {
+      throw StateError('La clé de chiffrement Hive doit contenir 32 octets.');
+    }
     return HiveAesCipher(keyBytes);
   }
 }

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 
 class SbToggle extends StatelessWidget {
@@ -17,7 +17,7 @@ class SbToggle extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final activeColor = isDark ? AppColors.darkPrimary : AppColors.primary;
-    final inactiveColor = (isDark ? AppColors.darkMutedForeground : AppColors.mutedForeground).withOpacity(0.3);
+    final inactiveColor = (isDark ? AppColors.darkMutedForeground : AppColors.mutedForeground).withValues(alpha: 0.3);
     final thumbColor = isDark ? Colors.white : AppColors.card;
 
     return GestureDetector(
@@ -45,7 +45,7 @@ class SbToggle extends StatelessWidget {
               color: thumbColor,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withValues(alpha: 0.15),
                   blurRadius: 4,
                   offset: const Offset(0, 1),
                 ),

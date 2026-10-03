@@ -1,4 +1,4 @@
-﻿name: save_babe
+name: save_babe
 description: Suivi de grossesse et du nouveau-né — privé, hors connexion, panafricain.
 publish_to: "none"
 version: 1.0.0+1
@@ -9,6 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # ── Firebase ───────────────────────────────────────────────
+  firebase_core: ^3.8.0
+  firebase_auth: ^5.3.4
 
   # ── State Management & DI ──────────────────────────────────
   flutter_riverpod: ^2.6.1

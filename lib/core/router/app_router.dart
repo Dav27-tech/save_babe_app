@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,6 +14,7 @@ import '../../features/health_card_scan/presentation/screens/import_screen.dart'
 import '../../features/health_card_scan/presentation/screens/ocr_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/onboarding/presentation/screens/consent_screen.dart';
+import '../../features/onboarding/presentation/screens/login_screen.dart';
 import '../../features/onboarding/presentation/screens/pregnancy_screen.dart';
 import '../../features/onboarding/presentation/screens/ready_screen.dart';
 import '../../features/onboarding/presentation/screens/signup_screen.dart';
@@ -26,19 +27,42 @@ import '../../features/profile/presentation/screens/offline_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/profile/presentation/screens/theme_screen.dart';
 import '../../features/trusted_person/presentation/screens/invite_screen.dart';
+import '../services/auth_service.dart';
 import '../state/app_user_provider.dart';
 import 'scaffold_with_nav_bar.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
+class RouterNotifier extends ChangeNotifier {
+  final Ref _ref;
+
+  RouterNotifier(this._ref) {
+    _ref.listen(
+      firebaseUserProvider,
+      (_, __) => notifyListeners(),
+    );
+    _ref.listen<bool>(
+      appUserStateNotifierProvider.select((s) => s.onboarded),
+      (_, __) => notifyListeners(),
+    );
+  }
+}
+
+final routerNotifierProvider = Provider<RouterNotifier>((ref) {
+  return RouterNotifier(ref);
+});
+
 final routerProvider = Provider<GoRouter>((ref) {
-  final userState = ref.watch(appUserStateProvider);
+  final notifier = ref.watch(routerNotifierProvider);
+  final initialOnboarded = ref.read(appUserStateNotifierProvider).onboarded;
 
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: userState.onboarded ? '/app/home' : '/onboarding/welcome',
+    refreshListenable: notifier,
+    initialLocation: initialOnboarded ? '/app/home' : '/onboarding/welcome',
     redirect: (context, state) {
+      final userState = ref.read(appUserStateNotifierProvider);
       final isOnboarding = state.matchedLocation.startsWith('/onboarding');
       final isRoot = state.matchedLocation == '/';
 
@@ -46,7 +70,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         return '/onboarding/welcome';
       }
 
-      if (userState.onboarded && isRoot) {
+      if (userState.onboarded &&
+          (isRoot ||
+              state.matchedLocation == '/onboarding/welcome' ||
+              state.matchedLocation == '/onboarding/login' ||
+              state.matchedLocation == '/onboarding/signup')) {
         return '/app/home';
       }
 
@@ -61,6 +89,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/onboarding/signup',
         builder: (context, state) => const SignupScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding/login',
+        builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: '/onboarding/pregnancy',

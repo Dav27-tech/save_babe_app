@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 
 class SbTabBarItem {
@@ -63,7 +63,7 @@ class SbTabBar extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final bgColor = isDark ? AppColors.darkCard.withOpacity(0.95) : Colors.white.withOpacity(0.95);
+    final bgColor = isDark ? AppColors.darkCard.withValues(alpha: 0.95) : Colors.white.withValues(alpha: 0.95);
     final borderColor = isDark ? AppColors.darkBorder : AppColors.border;
     final activeColor = isDark ? AppColors.darkPrimary : AppColors.primary;
     final inactiveColor = isDark ? AppColors.darkMutedForeground : AppColors.mutedForeground;

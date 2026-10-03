@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/state/app_user_provider.dart';
@@ -73,7 +73,7 @@ class TrackingScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(AppDimensions.radius2xl),
                   gradient: LinearGradient(
                     colors: isDark
-                        ? [AppColors.darkCard, AppColors.darkPrimary.withOpacity(0.3)]
+                        ? [AppColors.darkCard, AppColors.darkPrimary.withValues(alpha: 0.3)]
                         : [AppColors.secondary, AppColors.accent],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,

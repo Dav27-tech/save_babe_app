@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/state/app_user_provider.dart';
@@ -13,11 +13,13 @@ import '../../../../core/widgets/sb_header.dart';
 class ReadyScreen extends ConsumerWidget {
   const ReadyScreen({super.key});
 
-  void _finishAndGo(BuildContext context, WidgetRef ref, String targetRoute) {
-    ref.read(appUserStateNotifierProvider.notifier).update(
+  void _finishAndGo(BuildContext context, WidgetRef ref, String targetRoute) async {
+    await ref.read(appUserStateNotifierProvider.notifier).update(
           (s) => s.copyWith(onboarded: true),
         );
-    context.go(targetRoute);
+    if (context.mounted) {
+      context.go(targetRoute);
+    }
   }
 
   @override
@@ -53,7 +55,7 @@ class ReadyScreen extends ConsumerWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.3),
+                      color: AppColors.primary.withValues(alpha: 0.3),
                       blurRadius: 16,
                       offset: const Offset(0, 6),
                     ),
@@ -74,7 +76,7 @@ class ReadyScreen extends ConsumerWidget {
                     Text(
                       'semaines de grossesse',
                       style: AppTypography.bodyL.copyWith(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontWeight: FontWeight.w500,
                       ),
                     ),

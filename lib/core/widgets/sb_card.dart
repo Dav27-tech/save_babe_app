@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_dimensions.dart';
 
@@ -29,7 +29,7 @@ class SbCard extends StatelessWidget {
     final cardBorder = borderColor ?? (isDark ? AppColors.darkBorder : AppColors.border);
     final radius = borderRadius ?? BorderRadius.circular(AppDimensions.radius2xl);
 
-    Widget content = Container(
+    final Widget content = Container(
       padding: padding ?? const EdgeInsets.all(AppDimensions.pLg),
       decoration: BoxDecoration(
         color: cardBg,
@@ -39,7 +39,7 @@ class SbCard extends StatelessWidget {
             ? null
             : [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
+                  color: Colors.black.withValues(alpha: 0.03),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),

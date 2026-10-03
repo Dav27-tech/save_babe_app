@@ -1,4 +1,4 @@
-﻿import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import '../errors/exceptions.dart';
 
@@ -59,7 +59,9 @@ class AudioServiceImpl implements AudioService {
         onResult: (result) {
           onResult(result.recognizedWords);
         },
-        localeId: localeId ?? 'fr_FR',
+        listenOptions: SpeechListenOptions(
+          localeId: localeId ?? 'fr_FR',
+        ),
       );
     } catch (e) {
       throw AudioException('Erreur pendant l\'écoute audio', cause: e);

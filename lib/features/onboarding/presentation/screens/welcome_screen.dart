@@ -1,19 +1,21 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/sb_button.dart';
 import '../../../../core/widgets/sb_logo.dart';
 import '../../../../core/widgets/sb_private_badge.dart';
 
-class WelcomeScreen extends StatefulWidget {
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen>
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
@@ -65,8 +67,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       gradient: LinearGradient(
                         colors: isDark
                             ? [
-                                AppColors.darkPrimary.withOpacity(0.3),
-                                AppColors.darkPink.withOpacity(0.2)
+                                AppColors.darkPrimary.withValues(alpha: 0.3),
+                                AppColors.darkPink.withValues(alpha: 0.2)
                               ]
                             : [
                                 AppColors.secondary,
@@ -94,7 +96,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           color: AppColors.pink,
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.pink.withOpacity(0.4),
+                              color: AppColors.pink.withValues(alpha: 0.4),
                               blurRadius: 14,
                               offset: const Offset(0, 4),
                             ),
@@ -139,13 +141,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               SbButton(
                 text: 'Se connecter',
                 variant: SbButtonVariant.outline,
-                onPressed: () => context.push('/onboarding/signup'),
-              ),
-              const SizedBox(height: 8),
-              SbButton(
-                text: 'Découvrir l\'application ›',
-                variant: SbButtonVariant.ghost,
-                onPressed: () => context.push('/app/home'),
+                onPressed: () => context.push('/onboarding/login'),
               ),
               const SizedBox(height: 16),
               const SbPrivateBadge(text: 'Vos données restent privées'),

@@ -1,33 +1,43 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/app_keys.dart';
 import '../services/local_storage_service.dart';
 import 'app_user_state.dart';
 
 class AppUserNotifier extends StateNotifier<AppUserState> {
-  AppUserNotifier(this._storageService) : super(const AppUserState()) {
-    load();
-  }
+  AppUserNotifier(this._storageService, this._uid)
+      : super(_loadInitialState(_storageService, _uid));
 
   final LocalStorageService _storageService;
-  static const String _stateStorageKey = 'savebabe-state-v1';
 
-  Future<void> load() async {
+  /// UID Firebase de l'utilisateur — chaque compte a sa propre clé Hive
+  final String _uid;
+
+  /// Clé de stockage unique par utilisateur
+  static String _key(String uid) => 'savebabe-state-$uid';
+
+  /// Charge l'état depuis Hive de manière synchrone au démarrage
+  static AppUserState _loadInitialState(
+    LocalStorageService storageService,
+    String uid,
+  ) {
     try {
-      final raw = _storageService.get<String>(AppKeys.userStateBox, _stateStorageKey);
+      final raw = storageService.get<String>(AppKeys.userStateBox, _key(uid));
       if (raw != null && raw.isNotEmpty) {
         final map = jsonDecode(raw) as Map<dynamic, dynamic>;
-        state = AppUserState.fromJson(map);
+        return AppUserState.fromJson(map);
       }
     } catch (_) {
-      // Fallback sur l'\''état initial en cas d'\''erreur
+      // Fallback sur l'état initial en cas d'erreur
     }
+    return const AppUserState();
   }
 
+  /// Persiste l'état courant dans Hive sous la clé propre à l'UID
   Future<void> _persist() async {
     try {
       final raw = jsonEncode(state.toJson());
-      await _storageService.save(AppKeys.userStateBox, _stateStorageKey, raw);
+      await _storageService.save(AppKeys.userStateBox, _key(_uid), raw);
     } catch (_) {}
   }
 
@@ -122,9 +132,12 @@ class AppUserNotifier extends StateNotifier<AppUserState> {
     await _persist();
   }
 
+  /// Efface les données de CET utilisateur de Hive et remet l'état à zéro
   Future<void> reset() async {
-    await _storageService.clear(AppKeys.userStateBox);
+    try {
+      await _storageService.delete(AppKeys.userStateBox, _key(_uid));
+    } catch (_) {}
     state = const AppUserState();
-    await _persist();
   }
 }
+

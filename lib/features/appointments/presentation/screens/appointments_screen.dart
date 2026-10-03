@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/state/app_user_provider.dart';
@@ -113,7 +113,7 @@ class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
                             width: 52,
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             decoration: BoxDecoration(
-                              color: isDark ? AppColors.darkPrimary.withOpacity(0.2) : AppColors.secondary,
+                              color: isDark ? AppColors.darkPrimary.withValues(alpha: 0.2) : AppColors.secondary,
                               borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
                             ),
                             child: Column(

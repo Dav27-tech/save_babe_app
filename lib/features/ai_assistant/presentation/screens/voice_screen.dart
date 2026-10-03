@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/state/app_user_provider.dart';
@@ -129,7 +129,7 @@ class _VoiceScreenState extends ConsumerState<VoiceScreen>
                       color: _isListening ? AppColors.pink : AppColors.primary,
                       boxShadow: [
                         BoxShadow(
-                          color: (_isListening ? AppColors.pink : AppColors.primary).withOpacity(0.35),
+                          color: (_isListening ? AppColors.pink : AppColors.primary).withValues(alpha: 0.35),
                           blurRadius: 24,
                           offset: const Offset(0, 8),
                         ),

@@ -1,4 +1,6 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:save_babe/core/utils/date_formatter.dart';
 
 void main() {
@@ -19,5 +21,39 @@ void main() {
       expect(DateFormatter.trimester(20), equals(2));
       expect(DateFormatter.trimester(32), equals(3));
     });
+  });
+
+  testWidgets('Date picker opens with French Material localizations', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('fr', 'FR'), Locale('en', 'US')],
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: TextButton(
+              onPressed: () => showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime.now(),
+                locale: const Locale('fr', 'FR'),
+              ),
+              child: const Text('Choisir la date'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Choisir la date'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DatePickerDialog), findsOneWidget);
   });
 }

@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class EncryptionService {
   static const _keyName = 'savebabe_hive_key';
+
   final FlutterSecureStorage _storage;
 
   const EncryptionService(this._storage);

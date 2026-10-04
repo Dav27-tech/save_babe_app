@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,8 +20,12 @@ void main() {
   test('creates and persists a 32-byte key when none exists', () async {
     String? savedValue;
     when(() => storage.read(key: keyName)).thenAnswer((_) async => null);
-    when(() => storage.write(key: keyName, value: any(named: 'value')))
-        .thenAnswer((invocation) async {
+    when(
+      () => storage.write(
+        key: keyName,
+        value: any(named: 'value'),
+      ),
+    ).thenAnswer((invocation) async {
       savedValue = invocation.namedArguments[#value] as String;
     });
 
@@ -28,8 +33,12 @@ void main() {
 
     expect(cipher, isA<HiveAesCipher>());
     expect(base64Url.decode(savedValue!), hasLength(32));
-    verify(() => storage.write(key: keyName, value: any(named: 'value')))
-        .called(1);
+    verify(
+      () => storage.write(
+        key: keyName,
+        value: any(named: 'value'),
+      ),
+    ).called(1);
   });
 
   test('reuses a previously stored 32-byte key', () async {
@@ -40,7 +49,10 @@ void main() {
 
     expect(cipher, isA<HiveAesCipher>());
     verifyNever(
-      () => storage.write(key: keyName, value: any(named: 'value')),
+      () => storage.write(
+        key: keyName,
+        value: any(named: 'value'),
+      ),
     );
   });
 
@@ -53,7 +65,45 @@ void main() {
       throwsStateError,
     );
     verifyNever(
-      () => storage.write(key: keyName, value: any(named: 'value')),
+      () => storage.write(
+        key: keyName,
+        value: any(named: 'value'),
+      ),
     );
   });
+
+  test('writes encrypted bytes to disk and reads data with the same key', () async {
+    final directory = await Directory.systemTemp.createTemp('hive-encryption-');
+    const boxName = 'encryption_test_box';
+    const secret = 'CANARY_SECRET_84621';
+    final cipher = HiveAesCipher(List<int>.generate(32, (index) => index));
+
+    try {
+      Hive.init(directory.path);
+      final box = await Hive.openBox<String>(
+        boxName,
+        encryptionCipher: cipher,
+      );
+      await box.put('sensitive-value', secret);
+      await box.flush();
+
+      final fileContents = await File(box.path!).readAsBytes();
+      expect(
+        latin1.decode(fileContents, allowInvalid: true),
+        isNot(contains(secret)),
+      );
+
+      await box.close();
+      final reopenedBox = await Hive.openBox<String>(
+        boxName,
+        encryptionCipher: cipher,
+      );
+      expect(reopenedBox.get('sensitive-value'), secret);
+      await reopenedBox.close();
+    } finally {
+      await Hive.close();
+      await directory.delete(recursive: true);
+    }
+  });
+
 }
